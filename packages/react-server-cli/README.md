@@ -1,8 +1,82 @@
-# react-server-cli
+#React-Server Quickstart Guide using `react-server-cli`
+This will be a step-by-step guide to getting react-server up and running and serving a page as fast as possible.  If you are interested in exactly what is happening take a look at [react-server](../../packages/react-server) itself, some of the steps are repeated here but modified to work with the `react-server-cli`.
 
-A simple command line app that will compile a routes file for the client and start up express. To use:
+If you are just looking for the tool, install it with these [installation instructions](##Just).
 
-1. `npm install --save react-server-cli react-server`
+
+##What is `react-server-cli`?
+It is a simple command line app that will compile a routes file and its dependencies for the client and start up express to run `react-server`.
+
+The CLI builds and runs a `react-server` project, using Express. It compiles JS(X-with support from babel) and CSS into efficiently loadable bundles with code splitting using webpack, and it supports hot reloading of React components on the client-side during development.
+
+##Getting Started
+
+1. We need to install node.js.	We recommend installing node v4.2.3 with [n](https://github.com/tj/n) a version manager for node.js. See their [installation instructions](https://github.com/tj/n#installation) and [usage](https://github.com/tj/n#usage) for more details. If you already have node and npm installed, just go ahead install the correct version:
+
+		npm install -g n && n 4.2.3
+
+2. Create a new project folder and add some basic folders that will be used for your site:
+
+		mkdir example-react-server-site && cd example-react-server-site
+		mkdir pages
+
+3. Create a new npm project (follow the helpful [npm prompts](https://docs.npmjs.com/cli/init)).
+
+		npm init
+
+4. Install `react-server` and `react-server-cli`
+ 
+		npm install --save react-server-cli react-server
+
+5. Create a page object:
+
+		touch pages/HelloWorld.js
+
+	And add the page class:
+	```javascript
+		// "use strict" required to use `class` and `let`, but not strictly required
+		// for using react-server.
+		"use strict";
+
+		var React = require("react");
+
+		// TODO: jsx support
+		module.exports = class HelloWorldPage {
+			getElements() {
+				return React.createElement("div", null, "Hello, World!");
+			}
+		}
+```
+If you are interested in what else a page is capable of doing take a look here: [page-docs](../../packages/react-server/docs/page-api.md#page)
+
+
+6. Create the routes -- This file will tell the server where to find the page classes to render, [route-docs](../../packages/react-server/docs/page-api.md#route):
+
+		touch routes.js
+
+	And add a HelloWorld route:
+	
+	```javascript
+module.exports = {
+
+	// this maps URLs to modules that export a Page class.
+	routes: {
+		BazRoute: {
+			path: ["/"],
+			method: "get",
+			page: "./pages/HelloWorld"
+		},
+	}
+};
+```
+
+7. Add `./node_modules/react-server-cli/bin/react-server-cli` as the value for `scripts.start` in package.json.
+8. `npm start` from the directory that has your routes.js file.
+    * This will compile all of your objects and start the server listening on port 3000.
+9. Navigate to {host:3000} to see your page!
+
+## Just Give Me The Tool
+1. Install the cli: `npm install --save react-server-cli`
 2. Add `./node_modules/react-server-cli/bin/react-server-cli` as the value for `scripts.start` in package.json.
 3. `npm start` from the directory that has your routes.js file.
 
@@ -30,10 +104,6 @@ module.exports = {
 	}
 };
 ```
-
-##What It Does
-
-The CLI builds and runs a `react-server` project, using Express. It compiles JS(X) and CSS into efficiently loadable bundles with code splitting using webpack, and it supports hot reloading of React components on the client-side during development.
 
 ##Built-in Features
 
